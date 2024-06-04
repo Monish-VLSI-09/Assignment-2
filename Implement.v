@@ -16,10 +16,8 @@ module random_2(A,B,C,D,E,Y);
   and #3 a4 (t4,t3,E);    // t4 = (A & B) & E
   and #3 a5 (t5,Bbar,C);  // t5 = Bbar & C
   and #3 a6 (t6,C,Dbar);  // t6 = C & Dbar
-  or #2 o1 (t7,t1,t2);    // t7 = 
-  or #2 o2 (t8,t3,t4);
-  or #2 o3 (t9,t5,t6);
-  or #2 o4 (t10,t7,t8);
-  or #2 o5 (Y,t10,t9);
+  or #2 o1 (t7,t2,t4);    // t7 = (A & Bbar & Cbar) | ((A & B & E) 
+  or #2 o2 (t8,t5,t6);    // t8 = (Bbar & C) | (C & Dbar)
+  or #2 o3 (Y,t7,t8);     // Y = (A & Bbar & Cbar) | ((A & B & E) | (Bbar & C) | (C & Dbar)
 endmodule
 
