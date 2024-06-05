@@ -5,32 +5,37 @@
 
 
 a.  
-   module prayas(D,RST,Q,Qbar); //D latch and D flipflop with asynchronous reset are same
-    input D,RST;                //only difference is of CLOCK
+  module prayas(D,RST,enable,Q,Qbar); //D latch and D flipflop with asynchronous reset are same
+    input D,RST,enable;                //only difference is of CLOCK
     output reg Q;
     output Qbar;
     assign Qbar = ~Q;
  
-    always @(posedge RST)
+    always @(D or enable or RST)
      if (RST)
        Q <= 1'b0;
-	   else
+     else if (enable)
 	    Q <= D;
    endmodule 
 
-b.
-   module prayas(D,RST,CLK,Q,Qbar); //D latch and D flipflop with asynchronous reset are same
- input D,RST,CLK;                //only difference is of CLOCK
- output reg Q;
- output Qbar;
- assign Qbar = ~Q;
- 
- always @(posedge CLK)
-  if (~RST)
-    Q <= D;
-	else
-	 Q <= 1'b0;
-endmodule 
+
+b.  // Its synchronous reset
+   module prayas(D,CLK,RST,Q,Qbar);
+    input D,CLK,RST;
+    output reg Q;
+    output Qbar;
+    wire enable;
+    assign enable = 1; // Always enabled for D flip-flop
+    assign Qbar = ~Q;
+	   
+// Clock edge triggered for updating the output of the latch 
+    always @(posedge CLK) begin
+      if (RST)
+       Q <= 1'b0;
+     else
+       Q <= D;
+    end
+endmodule
 
 
 
@@ -46,7 +51,7 @@ module prayas(D,RST,CLK,Q,Qbar); //D latch and D flipflop with asynchronous rese
  output Qbar;
  assign Qbar = ~Q;
  
- always @(posedge CLK)
+	always @(posedge CLK or negedge RST)
   if (~RST)
     Q <= D;
 	else
